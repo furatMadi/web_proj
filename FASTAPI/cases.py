@@ -6,16 +6,17 @@ from pymongo import MongoClient
 from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+from db import cases_collection
 
 app = FastAPI()
 
-#database connection
-#atlas connection
-client = MongoClient("mongodb+srv://<1211543>:<furat1234>@cluster0.f5xruvm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-#access "human_rights_db" database
-db = client["human_rights_db"]
-#access "cases" collection
-cases_collection = db["cases"]
+# #database connection
+# #atlas connection
+# client = MongoClient("mongodb+srv://1211543:furat1234@cluster0.f5xruvm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+# #access "human_rights_db" database
+# db = client["human_rights_db"]
+# #access "cases" collection
+# cases_collection = db["cases"]
 
 #models
 class LocationModel(BaseModel):
@@ -52,8 +53,10 @@ class CaseModel(BaseModel):
 
 #helper
 def to_objectid_list(ids: List[str]):
-    return [ObjectId(_id) for _id in ids]
-
+    try:
+        return [ObjectId(_id) for _id in ids]
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid victim ID format")
 
 #endpoints
 @app.get("/")
