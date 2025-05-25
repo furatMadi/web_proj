@@ -2,9 +2,11 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from db import users_collection
 from data_analysis import router as analytics_router
+from cases import router as cases_router
 
 app = FastAPI()
 app.include_router(analytics_router)
+app.include_router(cases_router)
 
 #CORS for frontend setup
 app.add_middleware(

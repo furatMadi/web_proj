@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
@@ -8,7 +8,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from db import cases_collection
 
-app = FastAPI()
+router = APIRouter()
 
 # #database connection
 # #atlas connection
@@ -59,13 +59,13 @@ def to_objectid_list(ids: List[str]):
         raise HTTPException(status_code=400, detail="Invalid victim ID format")
 
 #endpoints
-@app.get("/")
+@router.get("/")
 async def root():
     return {"message": "Welcome to the Palestinian Prisoner Case Management API"}
 
 
 
-@app.post("/cases/")
+@router.post("/cases/")
 async def create_case(case: CaseModel):
     case_dict = case.dict()
     case_dict["victims"] = to_objectid_list(case_dict["victims"])
@@ -73,7 +73,7 @@ async def create_case(case: CaseModel):
     result = cases_collection.insert_one(case_dict)
     return {"id": str(result.inserted_id)}
 
-@app.get("/cases/")
+@router.get("/cases/")
 async def list_cases(status: Optional[str] = None):
     query = {"status": status} if status else {}
     cases = list(cases_collection.find(query))
@@ -83,7 +83,7 @@ async def list_cases(status: Optional[str] = None):
         case["victims"] = [str(v) for v in case["victims"]]
     return JSONResponse(content=jsonable_encoder(cases))
 
-@app.get("/cases/{case_id}")
+@router.get("/cases/{case_id}")
 async def get_case(case_id: str):
     case = cases_collection.find_one({"case_id": case_id})
     if not case:
@@ -93,7 +93,7 @@ async def get_case(case_id: str):
     case["victims"] = [str(v) for v in case["victims"]]
     return JSONResponse(content=jsonable_encoder(case))
 
-@app.patch("/cases/{case_id}")
+@router.patch("/cases/{case_id}")
 async def update_case_status(case_id: str, status: str):
     result = cases_collection.update_one(
         {"case_id": case_id},
@@ -103,7 +103,7 @@ async def update_case_status(case_id: str, status: str):
         raise HTTPException(status_code=404, detail="No updates made")
     return {"message": "Case status updated"}
 
-@app.delete("/cases/{case_id}")
+@router.delete("/cases/{case_id}")
 async def delete_case(case_id: str):
     result = cases_collection.delete_one({"case_id": case_id})
     if result.deleted_count == 0:
