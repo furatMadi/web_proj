@@ -3,10 +3,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from db import users_collection
 from data_analysis import router as analytics_router
 from cases import router as cases_router
+from victims import router as victims_router
+from review_reports import router as review_router
+from risk_assessments import router as risk_assessments_router
+
+
 
 app = FastAPI()
 app.include_router(analytics_router)
 app.include_router(cases_router)
+app.include_router(victims_router)
+app.include_router(review_router)
+app.include_router(risk_assessments_router)
 
 #CORS for frontend setup
 app.add_middleware(
