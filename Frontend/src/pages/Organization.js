@@ -14,7 +14,7 @@ function Organization() {
   const fetchReports = async () => {
     try {
       const res = await axios.get(`${API_BASE}/reports/`, {
-        params: { assigned_to: ORG_ID },
+        params: { assigned_to: ORG_ID, status: "accepted" }, // Only accepted reports
       });
       setReports(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
@@ -33,15 +33,31 @@ function Organization() {
   };
 
   const addEvidence = async (reportId) => {
-    const { type, url, description } = evidenceInputs[reportId] || {};
-    if (!type || !url || !description) {
+    const { type, url, description, file } = evidenceInputs[reportId] || {};
+    if (!type || (!url && !file) || !description) {
       alert("Please fill in all evidence fields.");
       return;
     }
 
+    let evidenceUrl = url;
+    // If a file is chosen, upload it and get its URL
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const uploadRes = await axios.post(`${API_BASE}/upload`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        evidenceUrl = uploadRes.data.url;
+      } catch (err) {
+        alert("File upload failed.");
+        return;
+      }
+    }
+
     const evidence = {
       type,
-      url,
+      url: evidenceUrl,
       description,
     };
 
@@ -50,7 +66,7 @@ function Organization() {
       fetchReports(); // Refresh reports after adding evidence
       setEvidenceInputs((prev) => ({
         ...prev,
-        [reportId]: { type: "", url: "", description: "" },
+        [reportId]: { type: "", url: "", description: "", file: null },
       }));
     } catch (err) {
       console.error("Failed to add evidence", err);
@@ -197,6 +213,8 @@ function Organization() {
                       <option value="">Select Type</option>
                       <option value="video">Video</option>
                       <option value="file">File</option>
+                      <option value="image">Image</option>
+                      <option value="text">Text</option>
                     </select>
                   </div>
                   <div style={{ marginBottom: "0.5rem" }}>
@@ -208,6 +226,23 @@ function Organization() {
                         handleEvidenceInputChange(r._id, "url", e.target.value)
                       }
                       placeholder="Enter URL"
+                      style={{
+                        marginLeft: "0.5rem",
+                        width: "65%",
+                        borderRadius: "4px",
+                        border: "1px solid #ccc",
+                        padding: "0.25rem",
+                      }}
+                    />
+                  </div>
+                  <div style={{ marginBottom: "0.5rem" }}>
+                    <label>Or Choose File:</label>
+                    <input
+                      type="file"
+                      accept="video/*,image/*,text/plain"
+                      onChange={(e) =>
+                        handleEvidenceInputChange(r._id, "file", e.target.files[0])
+                      }
                       style={{
                         marginLeft: "0.5rem",
                         width: "65%",

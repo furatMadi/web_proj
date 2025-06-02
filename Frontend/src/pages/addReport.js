@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import LocationPicker from "../components/LocationPicker";
 const cardStyle = {
   maxWidth: "600px",
   margin: "30px auto",
@@ -35,7 +35,7 @@ const AddReport = () => {
     contact_info: { name: "", email: "", phone: "" },
     incident_details: {
       date: "",
-      location: { address: "", city: "", state: "", zip: "" },
+      location: { country: "", city: "", latitude: "", longitude: "" },
       description: "",
       violation_types: [],
     },
@@ -90,14 +90,14 @@ const AddReport = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
-    try {
-      const response = await axios.post("http://localhost:8000/report/", formData); // Updated endpoint to /report
-      setMessage(response.data.message); // Handle success message
-    } catch (error) {
-      setMessage(error.response?.data?.detail || "Failed to add report"); // Handle error message
-    }
-  };
+  e.preventDefault(); // Prevent default form submission behavior
+  try {
+    const response = await axios.post("http://localhost:8000/reports/report", formData); // store the result in a variable
+    setMessage(response.data.message); // use the response variable correctly
+  } catch (error) {
+    setMessage(error.response?.data?.detail || "Failed to add report"); // Handle error message
+  }
+};
 
   return (
     <div style={cardStyle}>
@@ -170,46 +170,92 @@ const AddReport = () => {
             required
           />
         </div>
-        <div style={rowStyle}>
-          <label style={labelStyle}>Location Address:</label>
-          <input
-            type="text"
-            name="address"
-            value={formData.incident_details.location.address}
-            onChange={(e) => handleNestedChange(e, "incident_details", "location")}
-            style={inputStyle}
-          />
-        </div>
-        <div style={rowStyle}>
-          <label style={labelStyle}>Location City:</label>
-          <input
-            type="text"
-            name="city"
-            value={formData.incident_details.location.city}
-            onChange={(e) => handleNestedChange(e, "incident_details", "location")}
-            style={inputStyle}
-          />
-        </div>
-        <div style={rowStyle}>
-          <label style={labelStyle}>Location State:</label>
-          <input
-            type="text"
-            name="state"
-            value={formData.incident_details.location.state}
-            onChange={(e) => handleNestedChange(e, "incident_details", "location")}
-            style={inputStyle}
-          />
-        </div>
-        <div style={rowStyle}>
-          <label style={labelStyle}>Location Zip:</label>
-          <input
-            type="text"
-            name="zip"
-            value={formData.incident_details.location.zip}
-            onChange={(e) => handleNestedChange(e, "incident_details", "location")}
-            style={inputStyle}
-          />
-        </div>
+       <div style={rowStyle}>
+  <label style={labelStyle}>Location Country:</label>
+  <input
+    type="text"
+    name="country"
+    value={formData.incident_details.location.country}
+    onChange={(e) => handleNestedChange(e, "incident_details", "location")}
+    style={inputStyle}
+    required
+  />
+</div>
+
+  <div style={rowStyle}>
+  <label style={labelStyle}>Select Location on Map:</label>
+  <div style={{ flex: 1 }}>
+    <LocationPicker
+      latitude={formData.incident_details.location.latitude}
+      longitude={formData.incident_details.location.longitude}
+      onChange={({ latitude, longitude, city }) =>
+       setFormData((prev) => ({
+       ...prev,
+       incident_details: {
+      ...prev.incident_details,
+      location: {
+        ...prev.incident_details.location,
+        latitude,
+        longitude,
+        city, // ✅ Now defined and correctly saved
+      },
+    },
+  }))
+}
+
+    />
+  </div>
+</div>
+<div style={rowStyle}>
+  <label style={labelStyle}>City:</label>
+  <span>{formData.incident_details.location.city || "Not set"}</span>
+</div>
+
+{/* <div style={rowStyle}>
+  <label style={labelStyle}>Use My Location:</label>
+  <button
+    type="button"
+    onClick={() => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setFormData((prev) => ({
+              ...prev,
+              incident_details: {
+                ...prev.incident_details,
+                location: {
+                  ...prev.incident_details.location,
+                  latitude,
+                  longitude,
+                },
+              },
+            }));
+          },
+          (error) => {
+            alert("Failed to get location: " + error.message);
+          }
+        );
+      } else {
+        alert("Geolocation is not supported by your browser.");
+      }
+    }}
+    style={{ padding: "8px 16px" }}
+  >
+    Get My Location
+  </button>
+</div> */}
+
+<div style={rowStyle}>
+  <label style={labelStyle}>Latitude:</label>
+  <span>{formData.incident_details.location.latitude || "Not set"}</span>
+</div>
+<div style={rowStyle}>
+  <label style={labelStyle}>Longitude:</label>
+  <span>{formData.incident_details.location.longitude || "Not set"}</span>
+</div>
+
+
         <div style={rowStyle}>
           <label style={labelStyle}>Description:</label>
           <textarea

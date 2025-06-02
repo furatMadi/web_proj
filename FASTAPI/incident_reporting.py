@@ -11,9 +11,15 @@ router = APIRouter()
 router.include_router(note_router)
 
 # Models
+class LocationModel(BaseModel):
+    country: str
+    city: str
+    latitude: float
+    longitude: float
+
 class IncidentDetailsModel(BaseModel):
     date: datetime
-    location: dict
+    location: LocationModel
     description: str
     violation_types: List[str]
 
@@ -55,6 +61,15 @@ async def list_reports(
     for r in reports:
         r["_id"] = str(r["_id"])  # Convert ObjectId to string for JSON serialization
     return JSONResponse(content=jsonable_encoder(reports))
+
+@router.post("/report")
+async def create_report(report: IncidentReportModel):
+    try:
+        data = report.dict()
+        result = reports_collection.insert_one(data)
+        return {"message": "Report created successfully", "report_id": str(result.inserted_id)}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Validation or DB error: {str(e)}")
 
 @router.get("/analytics")
 async def get_violation_analytics():

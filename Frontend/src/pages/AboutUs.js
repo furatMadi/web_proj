@@ -52,12 +52,12 @@ const AboutUs = () => {
                     marginBottom: "1rem",
                   }}
                 />
-                <h4>John Doe</h4>
-                <p>Human Rights Advocate</p>
+                <h4>Aya Hammad</h4>
+                <p>Human Rights Admin</p>
               </div>
               <div>
                 <img
-                  src="team_member_2.jpg" // ضع المسار الصحيح للصورة
+                  src="team_member_2.jpg" 
                   alt="Team Member 2"
                   style={{
                     width: "150px",
@@ -65,8 +65,21 @@ const AboutUs = () => {
                     marginBottom: "1rem",
                   }}
                 />
-                <h4>Jane Smith</h4>
-                <p>Campaign Manager</p>
+                <h4>Leen Odeh</h4>
+                <p>Human right organizor</p>
+              </div>
+              <div>
+                <img
+                  src="team_member_2.jpg" 
+                  alt="Team Member 2"
+                  style={{
+                    width: "150px",
+                    borderRadius: "50%",
+                    marginBottom: "1rem",
+                  }}
+                />
+                <h4>Furat Madi</h4>
+                <p>Human right Analyzer</p>
               </div>
             </div>
           </section>

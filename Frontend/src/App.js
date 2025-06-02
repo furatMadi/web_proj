@@ -12,6 +12,7 @@ import AboutUs from "./pages/AboutUs";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminCases from "./pages/AdminCases";
 import AddReport from "./pages/addReport";
+import "leaflet/dist/leaflet.css";
 
 function App() {
   return (
