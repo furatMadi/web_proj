@@ -67,7 +67,7 @@ async def root():
     return {"message": "Welcome to the Palestinian Prisoner Case Management API"}
 
 # add the case to case_status_history collection when updates occur
-def save_case_snapshot(case_doc: dict):
+def save_case(case_doc: dict):
     case_status_history_collection.insert_one(case_doc)
 
 @router.post("/cases/")
