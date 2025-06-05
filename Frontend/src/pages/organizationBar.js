@@ -11,6 +11,8 @@ const OrganizationNav = () => {
     { name: "Add new Report", href: "/addReport" },
     { name: "Update a report", href: "/contact" },
     { name: "Search", href: "./SearchPage" },
+    { name: "Analytics", href: "/analytics" },
+    { name: "Logout", href: "/logout" },
   ];
 
   return (

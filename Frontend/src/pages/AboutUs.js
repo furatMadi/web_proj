@@ -57,7 +57,7 @@ const AboutUs = () => {
               </div>
               <div>
                 <img
-                  src="team_member_2.jpg" 
+                  src="teamImages/me.jpg" 
                   alt="Team Member 2"
                   style={{
                     width: "150px",

@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminCases from "./pages/AdminCases";
 import AddReport from "./pages/addReport";
 import "leaflet/dist/leaflet.css";
+import AnalyticsPage from "./pages/organizationAnalytics";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
       <Route path="/admindashborder" element={<AdminDashboard />} />
       <Route path="/admin/cases" element={<AdminCases />} />
             <Route path="/addReport" element={<AddReport />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
 
 
       {/* <Route path="/victim/:victimId" element={<VictimDetails />}/> */}
