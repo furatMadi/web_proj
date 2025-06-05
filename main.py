@@ -1,7 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from config.database import db
+from config.database import db  # Ensure db is a valid database connection object
+
+# Example for MongoDB using pymongo:
+# from pymongo import MongoClient
+# client = MongoClient("mongodb://localhost:27017/")
+# db = client["your_database_name"]
 
 app = FastAPI()
 
@@ -18,7 +23,7 @@ def read_root():
     return {"message": "Hello from FastAPI!"}
 
 class LoginRequest(BaseModel):
-    username: str
+    users_collection = db["users"]  # Ensure "users" collection exists in your database
     password: str
 
 @app.post("/api/login")

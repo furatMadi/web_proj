@@ -5,6 +5,7 @@ function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -14,6 +15,7 @@ function Login() {
             return;
         }
         setMessage("Logging in...");
+        setLoading(true);
         try {
             const response = await fetch("http://localhost:8000/api/login", {
                 method: "POST",
@@ -37,6 +39,8 @@ function Login() {
             }
         } catch (error) {
             setMessage("Network error");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -105,8 +109,9 @@ function Login() {
                             fontSize: "1rem",
                             cursor: "pointer"
                         }}
+                        disabled={loading}
                     >
-                        Login
+                        {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
                 {message && (
