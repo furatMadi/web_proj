@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/custom.css';
+import AnalystNav from '../components/AnalystNav';
+import Footer from '../components/Footer';
 
 const DetailedView = () => {
   const [filters, setFilters] = useState({
@@ -43,20 +45,14 @@ const DetailedView = () => {
   };
 
   const fetchOptions = () => {
-  fetch(`http://localhost:8000/api/options/regions`)
-    .then(res => res.json())
-    .then(data => {
-      console.log("Region options:", data);
-      setRegionOptions(Array.isArray(data) ? data : []);
-    });
+    fetch(`http://localhost:8000/api/options/regions`)
+      .then(res => res.json())
+      .then(data => setRegionOptions(Array.isArray(data) ? data : []));
 
-  fetch(`http://localhost:8000/api/options/violations`)
-    .then(res => res.json())
-    .then(data => {
-      console.log("Violation options:", data);
-      setViolationOptions(Array.isArray(data) ? data : []);
-    });
-};
+    fetch(`http://localhost:8000/api/options/violations`)
+      .then(res => res.json())
+      .then(data => setViolationOptions(Array.isArray(data) ? data : []));
+  };
 
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -73,64 +69,74 @@ const DetailedView = () => {
   }, []);
 
   return (
-    <div className="container mt-4">
-      <h1 className="mb-4">Detailed Analytics</h1>
-      <form onSubmit={handleSubmit} className="row g-3 mb-4">
-        <div className="col-md-3">
-          <label className="form-label">Start Date</label>
-          <input type="date" name="start_date" className="form-control" onChange={handleChange} value={filters.start_date} />
-        </div>
-        <div className="col-md-3">
-          <label className="form-label">End Date</label>
-          <input type="date" name="end_date" className="form-control" onChange={handleChange} value={filters.end_date} />
-        </div>
-        <div className="col-md-3">
-          <label className="form-label">Region</label>
-          <select name="region" className="form-select" onChange={handleChange} value={filters.region}>
-            <option value="">All</option>
-            {regionOptions.map(region => (
-              <option key={region} value={region}>{region}</option>
-            ))}
-          </select>
-        </div>
-        <div className="col-md-3">
-          <label className="form-label">Violation Type</label>
-          <select name="violation_type" className="form-select" onChange={handleChange} value={filters.violation_type}>
-            <option value="">All</option>
-            {violationOptions.map(type => (
-              <option key={type} value={type}>{type}</option>
-            ))}
-          </select>
-        </div>
-        <div className="col-12">
-          <button type="submit" className="btn btn-primary">Apply Filters</button>
-        </div>
-      </form>
+    <>
+      <AnalystNav />
+      <div className="container mt-4 text-center">
+        <h1 className="mb-4">Detailed Analytics</h1>
+        <form onSubmit={handleSubmit} className="row g-3 mb-5 text-start">
+          <div className="col-md-3">
+            <label className="form-label">Start Date</label>
+            <input type="date" name="start_date" className="form-control" onChange={handleChange} value={filters.start_date} />
+          </div>
+          <div className="col-md-3">
+            <label className="form-label">End Date</label>
+            <input type="date" name="end_date" className="form-control" onChange={handleChange} value={filters.end_date} />
+          </div>
+          <div className="col-md-3">
+            <label className="form-label">Region</label>
+            <select name="region" className="form-select" onChange={handleChange} value={filters.region}>
+              <option value="">All</option>
+              {regionOptions.map(region => (
+                <option key={region} value={region}>{region}</option>
+              ))}
+            </select>
+          </div>
+          <div className="col-md-3">
+            <label className="form-label">Violation Type</label>
+            <select name="violation_type" className="form-select" onChange={handleChange} value={filters.violation_type}>
+              <option value="">All</option>
+              {violationOptions.map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+          <div className="col-12">
+            <button type="submit" className="btn btn-primary">Apply Filters</button>
+          </div>
+        </form>
 
-      <div className="mb-4">
-        <h2 className="h5 mb-3">Violation Types (Filtered)</h2>
-        <Plot
-          data={[{ type: 'pie', labels: Object.keys(violations), values: Object.values(violations) }]}
-          layout={{ width: 500, height: 400 }}
-        />
-      </div>
+        <div className="mb-5 d-flex justify-content-center">
+          <div>
+            <h2 className="h5 mb-3">Violation Types (Filtered)</h2>
+            <Plot
+              data={[{ type: 'pie', labels: Object.keys(violations), values: Object.values(violations) }]}
+              layout={{ width: 500, height: 400 }}
+            />
+          </div>
+        </div>
 
-      <div className="mb-4">
-        <h2 className="h5 mb-3">Cases by Region (Filtered)</h2>
-        <Plot
-          data={[{ type: 'bar', x: regions.map(r => r.region), y: regions.map(r => r.count) }]}
-          layout={{ width: 600, height: 400 }}
-        />
-      </div>
+        <div className="mb-5 d-flex justify-content-center">
+          <div>
+            <h2 className="h5 mb-3">Cases by Region (Filtered)</h2>
+            <Plot
+              data={[{ type: 'bar', x: regions.map(r => r.region), y: regions.map(r => r.count) }]}
+              layout={{ width: 600, height: 400 }}
+            />
+          </div>
+        </div>
 
-      <div className="mb-4">
-        <h2 className="h5 mb-3">Cases Over Time (Filtered)</h2>
-        <Plot
-          data={[{ type: 'scatter', mode: 'lines+markers', x: timeline.map(t => t.date), y: timeline.map(t => t.cases) }]}
-          layout={{ width: 600, height: 400 }}
-        />
+        <div className="mb-5 d-flex justify-content-center">
+          <div>
+            <h2 className="h5 mb-3">Cases Over Time (Filtered)</h2>
+            <Plot
+              data={[{ type: 'scatter', mode: 'lines+markers', x: timeline.map(t => t.date), y: timeline.map(t => t.cases) }]}
+              layout={{ width: 600, height: 400 }}
+            />
+          </div>
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

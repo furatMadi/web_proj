@@ -9,7 +9,7 @@ from pymongo import MongoClient
 from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from db import cases_collection
+from db import cases_collection , case_status_history_collection
 
 router = APIRouter()
 
@@ -66,7 +66,9 @@ def to_objectid_list(ids: List[str]):
 async def root():
     return {"message": "Welcome to the Palestinian Prisoner Case Management API"}
 
-
+# add the case to case_status_history collection when updates occur
+def save_case_snapshot(case_doc: dict):
+    case_status_history_collection.insert_one(case_doc)
 
 @router.post("/cases/")
 async def create_case(case: CaseModel):

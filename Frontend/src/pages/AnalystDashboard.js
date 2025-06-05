@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
 import { Link } from 'react-router-dom';
+import AnalystNav from '../components/AnalystNav';
+import Footer from '../components/Footer';
 
 const AnalystDashboard = () => {
   const [violations, setViolations] = useState({});
@@ -22,59 +24,68 @@ const AnalystDashboard = () => {
   }, []);
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <aside className="w-64 bg-gray-100 p-4 flex flex-col justify-between">
-        <div>
-          <h2 className="text-xl font-bold mb-6">Analyst Panel</h2>
-          <nav className="space-y-2">
-            <Link to="/analystDashboard" className="block text-blue-700 font-medium">Dashboard</Link>
-            <Link to="/detailed" className="block text-gray-700 hover:text-blue-600">Detailed View</Link>
-            <Link to="/geo" className="block text-gray-700 hover:text-blue-600">Geo Insights</Link>
-            <Link to="/report" className="block text-gray-700 hover:text-blue-600">Generate Report</Link>
-          </nav>
-        </div>
-        <footer className="text-sm text-gray-500">
-          <p>© 2025 Human Rights MIS</p>
-        </footer>
-      </aside>
-
-      {/* Main Content */}
-      <div className="flex-1 p-6 overflow-y-auto">
-        <header className="flex justify-between items-center mb-6">
+    <>
+      <AnalystNav />
+      <div className="container mt-4 text-center">
+        <header className="mb-5">
           <h1 className="text-2xl font-bold">Dashboard Overview</h1>
-          <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-            Logout
-          </button>
+          <p className="text-muted">
+            This dashboard presents real-time analytics of violations committed against Palestinian prisoners in Israeli jails.
+          </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white rounded shadow p-4">
-            <h2 className="text-lg font-semibold mb-2">Violation Types</h2>
+        <div className="row justify-content-center mb-4">
+          <div className="col-md-6 bg-white rounded shadow p-4">
+            <h2 className="text-lg font-semibold mb-3">Distribution of Violation Types</h2>
+            <p className="text-secondary">This pie chart shows the proportion of each violation type reported.</p>
             <Plot
-              data={[{ type: 'pie', labels: Object.keys(violations), values: Object.values(violations) }]}
-              layout={{ width: 400, height: 300, margin: { t: 0, b: 0 } }}
+              data={[{
+                type: 'pie',
+                labels: Object.keys(violations),
+                values: Object.values(violations),
+                textinfo: 'label+percent',
+                hoverinfo: 'label+value'
+              }]}
+              layout={{ width: 450, height: 350, margin: { t: 20, b: 20 } }}
             />
           </div>
+        </div>
 
-          <div className="bg-white rounded shadow p-4">
-            <h2 className="text-lg font-semibold mb-2">Cases by Region</h2>
+        <div className="row justify-content-center mb-4">
+          <div className="col-md-6 bg-white rounded shadow p-4">
+            <h2 className="text-lg font-semibold mb-3">Cases by Region</h2>
+            <p className="text-secondary">This bar chart shows the number of cases reported per region.</p>
             <Plot
-              data={[{ type: 'bar', x: regions.map(r => r.region), y: regions.map(r => r.count) }]}
-              layout={{ width: 400, height: 300, margin: { t: 0, b: 30 } }}
+              data={[{
+                type: 'bar',
+                x: regions.map(r => r.region),
+                y: regions.map(r => r.count),
+                marker: { color: 'orange' }
+              }]}
+              layout={{ width: 450, height: 350, margin: { t: 20, b: 60 }, xaxis: { tickangle: -45 } }}
             />
           </div>
+        </div>
 
-          <div className="bg-white rounded shadow p-4 col-span-full">
-            <h2 className="text-lg font-semibold mb-2">Cases Over Time</h2>
+        <div className="row justify-content-center mb-5">
+          <div className="col-md-10 bg-white rounded shadow p-4">
+            <h2 className="text-lg font-semibold mb-3">Violation Trends Over Time</h2>
+            <p className="text-secondary">This line graph illustrates the monthly number of reported cases over time.</p>
             <Plot
-              data={[{ type: 'scatter', mode: 'lines+markers', x: timeline.map(t => t.date), y: timeline.map(t => t.cases) }]}
-              layout={{ width: 850, height: 300 }}
+              data={[{
+                type: 'scatter',
+                mode: 'lines+markers',
+                x: timeline.map(t => t.date),
+                y: timeline.map(t => t.cases),
+                line: { color: 'tomato' }
+              }]}
+              layout={{ width: 850, height: 400, margin: { t: 20, b: 40 } }}
             />
           </div>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 
