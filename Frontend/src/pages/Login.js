@@ -26,7 +26,7 @@ function Login() {
                 if (data.role === "admin") {
                     navigate("/admin");
                 } else if (data.role === "analyst") {
-                    navigate("/analyst");
+                    navigate("/analystDashboard");
                 } else if (data.role === "organization") {
                     navigate("/organization");
                 } else {
