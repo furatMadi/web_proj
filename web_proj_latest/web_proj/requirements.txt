@@ -1,0 +1,6 @@
+fastapi==0.103.0
+uvicorn
+pymongo
+python-multipart
+typing-extensions==4.5.0
+pydantic==1.10.13
