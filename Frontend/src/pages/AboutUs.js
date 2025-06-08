@@ -1,11 +1,11 @@
 import React from "react";
-import Navbar from "./Navbar"; // تأكد من المسار الصحيح
+// import Navbar from "./Navbar"; // تأكد من المسار الصحيح
 import Footer from "../components/Footer"; // تأكد من المسار الصحيح
 
 const AboutUs = () => {
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <main style={{ padding: "3rem 2rem" }}>
         <h1 style={{ textAlign: "center", marginBottom: "2rem" }}>About Us</h1>
 

@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "./Navbar";
+// import Navbar from "./Navbar";
 import StatCard from "./StatCard";
 import NewsCard from "./NewsCard";
 
@@ -8,8 +8,6 @@ import childrenImg from "../images/children.png";
 import femalesImg from "../images/females.png";
 import totalImg from "../images/total.png";
 import Footer from "../components/Footer";
-
-
 
 const statsData = [
   {
@@ -43,7 +41,7 @@ const newsData = [
 const Dashboard = () => {
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <main style={{ padding: "1rem 2rem" }}>
         <section
           style={{

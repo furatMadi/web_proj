@@ -17,7 +17,7 @@ const AdminCaseTools = () => {
 
   return (
     <div>
-      {/* ✅ Navbar */}
+      {/* ✅ Navbar
       <nav style={styles.navbar}>
         <img src={logo} alt="Humonitor Logo" style={{ height: "70px" }} />
         <div style={styles.logo}>Humonitor Dashboard</div>
@@ -38,7 +38,7 @@ const AdminCaseTools = () => {
             </li>
           ))}
         </ul>
-      </nav>
+      </nav> */}
 
       {/* ✅ Main Tools Section */}
       <div style={styles.wrapper}>

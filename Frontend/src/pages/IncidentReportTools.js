@@ -16,7 +16,7 @@ const IncidentReportTools = () => {
   return (
     <div>
       {/* 🔸 Navbar (مختصر للتقارير) */}
-      <nav style={styles.navbar}>
+      {/* <nav style={styles.navbar}>
         <img src={logo} alt="Humonitor Logo" style={{ height: "70px" }} />
         <div style={styles.logo}>Humonitor Dashboard</div>
         <ul style={styles.navLinks}>
@@ -36,7 +36,7 @@ const IncidentReportTools = () => {
             </li>
           ))}
         </ul>
-      </nav>
+      </nav> */}
 
       {/* 🔸 Tools Card Section */}
       <div style={styles.wrapper}>

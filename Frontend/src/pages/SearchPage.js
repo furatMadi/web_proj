@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "./Navbar";
+// import Navbar from "./Navbar";
 import Footer from "../components/Footer";
 import axios from "axios";
 
@@ -57,7 +57,7 @@ const SearchPage = () => {
     <div
       style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
     >
-      <Navbar />
+      {/* <Navbar /> */}
       <main
         style={{
           flexGrow: 1,

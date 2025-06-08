@@ -37,7 +37,7 @@ const AdminDashboard = () => {
 
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <main style={{ padding: "2rem 3rem" }}>
         <h1 style={{ textAlign: "center" }}>Admin Dashboard</h1>
 
