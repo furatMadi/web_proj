@@ -9,6 +9,15 @@ from addEvidence import router as evidence_router  # Import the note_management 
 import os
 from uuid import uuid4
 from fastapi.staticfiles import StaticFiles
+# from victims import router as victims_router
+from victims import router as victims_router
+from risk_assessments import router as risk_assessments_router
+# from database_query import router as database_query_router
+
+from database_query import router as database_query_router
+from get_new_reports import router as new_reports_router
+from allcases import router as allcases_router
+
 
 app = FastAPI()
 
@@ -18,6 +27,13 @@ app.include_router(cases_router)
 app.include_router(org_router)
 app.include_router(incident_reporting_router, prefix="/reports")
 app.include_router(evidence_router, prefix="/reports")  # Evidence endpoint provided here
+app.include_router(new_reports_router)  
+app.include_router(victims_router)
+app.include_router(risk_assessments_router)
+app.include_router(allcases_router)
+
+app.include_router(database_query_router)
+
 
 # CORS for frontend setup
 app.add_middleware(

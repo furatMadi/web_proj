@@ -1,7 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState , useEffect } from 'react';
-import AnalystNav from '../components/AnalystNav';
 import Footer from '../components/Footer';
 
 const ReportPage = () => {
@@ -61,7 +60,6 @@ const handleGenerate = async () => {
 
   return (
      <>
-      <AnalystNav />
     <div className="container mt-4">
       <h1 className="mb-4">Report Generator</h1>
       <form className="row g-3 mb-4">

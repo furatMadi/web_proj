@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom"; // Added Route and Routes
 import logo from "../images/humonitor_logo.png";
+import DeleteReport from "./deleteReport"; // Import DeleteReport component
 
 const OrganizationNav = () => {
   const [hoverIndex, setHoverIndex] = useState(null);
@@ -9,34 +10,39 @@ const OrganizationNav = () => {
     { name: "Home", href: "./" },
     { name: "About Us", href: "/about" },
     { name: "Add new Report", href: "/addReport" },
-    { name: "Update a report", href: "/contact" },
     { name: "Search", href: "./SearchPage" },
     { name: "Analytics", href: "/analytics" },
+    { name: "Delete Report", href: "/deleteReport" }, // Corrected capitalization
     { name: "Logout", href: "/logout" },
   ];
 
   return (
-    <nav style={styles.navbar}>
-      <img src={logo} alt="Humonitor Logo" style={{ height: "70px" }} />
-      <div style={styles.logo}>Humonitor Dashboard</div>
-      <ul style={styles.navLinks}>
-        {navItems.map((item, i) => (
-          <li key={item.name}>
-            <Link
-              to={item.href}
-              style={{
-                ...styles.navLink,
-                ...(hoverIndex === i ? styles.navLinkHover : {}),
-              }}
-              onMouseEnter={() => setHoverIndex(i)}
-              onMouseLeave={() => setHoverIndex(null)}
-            >
-              {item.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <>
+      <nav style={styles.navbar}>
+        <img src={logo} alt="Humonitor Logo" style={{ height: "70px" }} />
+        <div style={styles.logo}>Organization Dashboard</div>
+        <ul style={styles.navLinks}>
+          {navItems.map((item, i) => (
+            <li key={item.name}>
+              <Link
+                to={item.href}
+                style={{
+                  ...styles.navLink,
+                  ...(hoverIndex === i ? styles.navLinkHover : {}),
+                }}
+                onMouseEnter={() => setHoverIndex(i)}
+                onMouseLeave={() => setHoverIndex(null)}
+              >
+                {item.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <Routes>
+        <Route path="/deleteReport" element={<DeleteReport />} /> {/* Add route */}
+      </Routes>
+    </>
   );
 };
 

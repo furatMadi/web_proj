@@ -3,7 +3,6 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import L from 'leaflet';
-import AnalystNav from '../components/AnalystNav';
 import Footer from '../components/Footer';
 
 const GeoInsights = () => {
@@ -71,7 +70,6 @@ const GeoInsights = () => {
 
   return (
     <>
-      <AnalystNav />
       <div className="container mt-4">
         <h1 className="mb-4">Geospatial Insights</h1>
 

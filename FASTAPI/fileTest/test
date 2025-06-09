@@ -5,6 +5,5 @@ import io
 url = "http://localhost:3000/evidence/child_abuse.png"
 r = requests.get(url)
 
-# If this fails, then Excel export will also fail
 img = Image.open(io.BytesIO(r.content))
-img.show()  # Opens image preview window
+img.show() 

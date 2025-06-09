@@ -7,6 +7,7 @@ from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from db import victims_collection
+from db import victim_risk_assessments_collection 
 
 
 
@@ -20,10 +21,9 @@ from datetime import datetime
 from bson import ObjectId
 from bson.errors import InvalidId
 
-router = APIRouter(
-    prefix="/victims",
-    tags=["Victims"]
-)
+
+router = APIRouter()
+
 
 
 
@@ -44,6 +44,15 @@ class RiskAssessment(BaseModel):
     threats: List[str]
     protection_needed: bool
 
+
+class UpdateRiskLevel(BaseModel):
+    level: str
+    threats: Optional[List[str]] = []
+    protection_needed: Optional[bool] = False
+    assessed_by: Optional[str] = "admin_user"
+    notes: Optional[str] = None
+
+
 class SupportService(BaseModel):
     type: str
     provider: Optional[str] = None
@@ -58,8 +67,7 @@ class Victim(BaseModel):
     risk_assessment: RiskAssessment
     support_services: Optional[List[SupportService]] = []
 
-class UpdateRiskLevel(BaseModel):
-    level: str
+
 
 
 # --- POST: Add new victim ---
@@ -71,13 +79,30 @@ def create_victim(victim: Victim):
         victim_dict["created_at"] = now
         victim_dict["updated_at"] = now
 
-        print("🟢 Inserting victim:", victim_dict)  # Debug
+        # ✨ أدخل الضحية أولًا
         result = victims_collection.insert_one(victim_dict)
-        return {"id": str(result.inserted_id), "message": "Victim added successfully"}
+        victim_id = result.inserted_id
+
+        # ✨ بعدها أضف تقييم الخطر الأولي إلى victim_risk_assessments
+        risk_assessment = victim_dict.get("risk_assessment", {})
+        assessment_doc = {
+            "victim_id": victim_id,
+            "risk_level": risk_assessment.get("level", "unknown"),
+            "threats": risk_assessment.get("threats", []),
+            "protection_needed": risk_assessment.get("protection_needed", False),
+            "assessment_date": now,
+            "assessed_by": "system",  # أو admin لاحقًا
+            "notes": "Initial risk assessment (auto-added)",
+        }
+
+        victim_risk_assessments_collection.insert_one(assessment_doc)
+
+        return {"id": str(victim_id), "message": "Victim and initial risk assessment added"}
     
     except Exception as e:
         print("❌ Error while inserting victim:", e)
         raise HTTPException(status_code=500, detail="Internal Server Error")
+
 
 # --- GET: Get victim by ID ---
 @router.get("/victims/{victim_id}")
@@ -97,20 +122,38 @@ def get_victim(victim_id: str):
 @router.patch("/victims/{victim_id}")
 def update_risk_level(victim_id: str, update: UpdateRiskLevel):
     try:
+        now = datetime.utcnow()
+
+        # ✨ أولاً، تعديل الضحية نفسها
         result = victims_collection.update_one(
             {"_id": ObjectId(victim_id)},
             {"$set": {
                 "risk_assessment.level": update.level,
-                "updated_at": datetime.utcnow()
+                "updated_at": now
             }}
         )
+
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Victim not found")
+
+        # ✨ ثانيًا، سجل التغيير في جدول risk_assessments
+        assessment_doc = {
+            "victim_id": ObjectId(victim_id),
+            "risk_level": update.level,
+            "threats": update.threats if update.threats else [],
+            "protection_needed": update.protection_needed if hasattr(update, "protection_needed") else False,
+            "assessment_date": now,
+            "assessed_by": update.assessed_by if hasattr(update, "assessed_by") else "admin_user",
+            "notes": update.notes or "Updated via patch",
+        }
+
+        victim_risk_assessments_collection.insert_one(assessment_doc)
+
+        return {"message": "Risk level updated and logged"}
+
     except InvalidId:
         raise HTTPException(status_code=400, detail="Invalid victim ID format")
 
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Victim not found")
-
-    return {"message": "Risk level updated"}
 
 # --- GET: Get victims by case ID ---
 @router.get("/victims/case/{case_id}")
@@ -138,4 +181,14 @@ def ping_db():
         client.admin.command('ping')
         return {"status": "✅ MongoDB connected successfully"}
     except Exception as e:
-        return {"status": "❌ MongoDB connection failed", "error": str(e)}
+        return {"status": "❌ MongoDB connection failed", "error": str(e)} 
+    
+@router.get("/victims-list")
+
+def list_victims():
+    victims = victims_collection.find({}, {"_id": 1, "type": 1})
+    return [
+        {"_id": str(v["_id"]), "type": v.get("type", "Unknown")}
+        for v in victims
+    ]
+

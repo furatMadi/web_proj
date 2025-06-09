@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import OrganizationNav from "./organizationBar";
+// import OrganizationNav from "./organizationBar";
 import Footer from "../components/Footer";
 
 const API_BASE = "http://localhost:8000";
@@ -90,7 +90,7 @@ function Organization() {
 
   return (
     <div>
-      <OrganizationNav />
+      {/* <OrganizationNav /> */}
       <div style={{ flex: 1, padding: "1rem 2rem" }}>
         <main>
           <section
