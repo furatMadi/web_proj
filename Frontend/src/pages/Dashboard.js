@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "./Navbar";
+// import Navbar from "./Navbar";
 import StatCard from "./StatCard";
 import NewsCard from "./NewsCard";
 
@@ -9,13 +9,11 @@ import femalesImg from "../images/females.png";
 import totalImg from "../images/total.png";
 import Footer from "../components/Footer";
 
-
-
 const statsData = [
   {
     title: "Administrative Detainees",
     number: 3577,
-    imgSrc: detaineesImg, // حط صورة مناسبة في public/images
+    imgSrc: detaineesImg,
   },
   {
     title: "Child Prisoners",
@@ -43,7 +41,7 @@ const newsData = [
 const Dashboard = () => {
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <main style={{ padding: "1rem 2rem" }}>
         <section
           style={{

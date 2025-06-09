@@ -1,4 +1,7 @@
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from typing import List, Optional
+from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
@@ -6,19 +9,11 @@ from pymongo import MongoClient
 from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from db import cases_collection
+from db import cases_collection , case_status_history_collection
 
 router = APIRouter()
 
-# #database connection
-# #atlas connection
-# client = MongoClient("mongodb+srv://1211543:furat1234@cluster0.f5xruvm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-# #access "human_rights_db" database
-# db = client["human_rights_db"]
-# #access "cases" collection
-# cases_collection = db["cases"]
 
-#models
 class LocationModel(BaseModel):
     country: str
     region: str
@@ -63,7 +58,9 @@ def to_objectid_list(ids: List[str]):
 async def root():
     return {"message": "Welcome to the Palestinian Prisoner Case Management API"}
 
-
+# add the case to case_status_history collection when updates occur
+def save_case(case_doc: dict):
+    case_status_history_collection.insert_one(case_doc)
 
 @router.post("/cases/")
 async def create_case(case: CaseModel):
@@ -109,3 +106,30 @@ async def delete_case(case_id: str):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Case not found")
     return {"message": "Case deleted"}
+
+
+
+@router.post("/admin/create-case")
+async def add_case_by_admin(case: CaseModel):
+    try:
+        case_dict = case.dict()
+
+        # إعدادات ثابتة للإضافة من قبل الأدمن
+        case_dict["status"] = "accepted"
+        case_dict["created_by"] = ObjectId("6830ce20941edddb797abd1d")  # ← ID الأدمن (aya)6830ce20941edddb797abd1d
+        case_dict["victims"] = to_objectid_list(case_dict["victims"])
+        case_dict["created_at"] = datetime.utcnow()
+        case_dict["updated_at"] = datetime.utcnow()
+
+        # حفظ في مجموعة القضايا
+        result = cases_collection.insert_one(case_dict)
+
+        # حفظ نسخة في السجل التاريخي
+        history_doc = case_dict.copy()
+        history_doc["case_ref_id"] = result.inserted_id
+        case_status_history_collection.insert_one(history_doc)
+
+        return {"message": "Case added by admin", "id": str(result.inserted_id)}
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error while saving case: {str(e)}")

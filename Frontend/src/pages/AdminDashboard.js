@@ -1,12 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+// import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
+// import  { useEffect } from "react";
 
 const AdminDashboard = () => {
+  const [stats, setStats] = useState({
+    victims: 0,
+    cases: 0,
+    reports: 0,
+  });
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const [v, c, r] = await Promise.all([
+          fetch("http://localhost:8000/stats/victims-count").then((res) =>
+            res.json()
+          ),
+          fetch("http://localhost:8000/stats/cases-count").then((res) =>
+            res.json()
+          ),
+          fetch("http://localhost:8000/stats/reports-count").then((res) =>
+            res.json()
+          ),
+        ]);
+        setStats({ victims: v.count, cases: c.count, reports: r.count });
+      } catch (err) {
+        console.error("Error fetching stats:", err);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <main style={{ padding: "2rem 3rem" }}>
         <h1 style={{ textAlign: "center" }}>Admin Dashboard</h1>
 
@@ -19,38 +50,8 @@ const AdminDashboard = () => {
             marginTop: "2rem",
           }}
         >
-          <nav
-            style={{
-              width: "20%",
-              backgroundColor: "#f8f9fa",
-              padding: "1rem",
-              borderRadius: "4px",
-            }}
-          >
-            <h3>Admin Menu</h3>
-            <ul style={{ listStyleType: "none", padding: 0 }}>
-              <li style={{ margin: "1rem 0" }}>
-                <Link to="/admin/victims" style={styles.navLink}>
-                  Victims
-                </Link>
-              </li>
-              <li style={{ margin: "1rem 0" }}>
-                <Link to="/admin/cases" style={styles.navLink}>
-                  Cases
-                </Link>
-              </li>
-              <li style={{ margin: "1rem 0" }}>
-                <Link to="/admin/reports" style={styles.navLink}>
-                  Incident Reports
-                </Link>
-              </li>
-              <li style={{ margin: "1rem 0" }}>
-                <Link to="/admin/search" style={styles.navLink}>
-                  Advanced Search
-                </Link>
-              </li>
-            </ul>
-          </nav>
+          
+          
 
           {/* Main Content for displaying data */}
           <div style={{ width: "75%" }}>
@@ -58,24 +59,15 @@ const AdminDashboard = () => {
             <div style={{ display: "flex", gap: "2rem" }}>
               <div style={styles.card}>
                 <h4>Victims</h4>
-                <p>Total: 120</p>
-                <Link to="/admin/victims" style={styles.button}>
-                  View Victims
-                </Link>
+                <p>Total: {stats.victims}</p>
               </div>
               <div style={styles.card}>
                 <h4>Cases</h4>
-                <p>Total: 50</p>
-                <Link to="/admin/cases" style={styles.button}>
-                  View Cases
-                </Link>
+                <p>Total: {stats.cases}</p>
               </div>
               <div style={styles.card}>
                 <h4>Incident Reports</h4>
-                <p>Total: 25</p>
-                <Link to="/admin/reports" style={styles.button}>
-                  View Reports
-                </Link>
+                <p>Total: {stats.reports}</p>
               </div>
             </div>
           </div>

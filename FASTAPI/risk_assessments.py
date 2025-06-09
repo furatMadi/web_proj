@@ -66,3 +66,9 @@ async def delete_risk_assessment(assessment_id: str):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Risk assessment not found")
     return {"message": "Risk assessment deleted successfully"}
+
+@router.get("/victims/list")
+async def list_victims_with_assessments():
+    victim_ids = victim_risk_assessments_collection.distinct("victim_id")
+    result = [{"_id": str(v_id)} for v_id in victim_ids]
+    return JSONResponse(content=jsonable_encoder(result))

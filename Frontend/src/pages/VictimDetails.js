@@ -1,47 +1,89 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import "../css/VictimDetails.css";
+import { useNavigate } from "react-router-dom";
 
-function VictimDetails({ victimId }) {
+function VictimDetails() {
+  const [victimId, setVictimId] = useState("");
   const [victim, setVictim] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [victimList, setVictimList] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    async function fetchVictim() {
-      try {
-        const response = await fetch(
-          `http://localhost:8000/victims/${victimId}`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch victim data");
-        }
-        const data = await response.json();
-        setVictim(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchVictim();
-  }, [victimId]);
+  const navigate = useNavigate();
 
-  if (loading) return <p>Loading victim details...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (!victim) return <p>No victim data found.</p>;
+  // ✅ Load victim list on mount
+  useEffect(() => {
+    const fetchVictimList = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/victims-list");
+        const data = await res.json();
+        setVictimList(data); // expected: array of {_id, type}
+      } catch (err) {
+        console.error("Failed to fetch victim list:", err);
+      }
+    };
+    fetchVictimList();
+  }, []);
+
+  const fetchVictim = async () => {
+    setLoading(true);
+    setError(null);
+    setVictim(null);
+
+    try {
+      const response = await fetch(`http://localhost:8000/victims/${victimId}`);
+      if (!response.ok) throw new Error("Failed to fetch victim data");
+      const data = await response.json();
+      setVictim(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div>
-      <h2>Victim Details</h2>
-      <p>
-        <strong>Type:</strong> {victim.type}
-      </p>
-      <p>
-        <strong>Anonymous:</strong> {victim.anonymous ? "Yes" : "No"}
-      </p>
+    <div className="victim-container">
+      <h2>🔍 Search Victim by ID</h2>
+      <div className="search-box">
+        <select
+          value={victimId}
+          onChange={(e) => setVictimId(e.target.value)}
+          style={{ padding: "8px", marginRight: "10px" }}
+        >
+          <option value="">-- Select Victim ID --</option>
+          {Array.isArray(victimList) &&
+            victimList.map((v) => (
+              <option key={v._id} value={v._id}>
+                {v._id} ({v.type})
+              </option>
+            ))}
+        </select>
 
-      {victim.demographics && (
-        <>
-          <h3>Demographics</h3>
+        <input
+          type="text"
+          placeholder="Or enter Victim ID manually"
+          value={victimId}
+          onChange={(e) => setVictimId(e.target.value)}
+        />
+
+        <button onClick={fetchVictim}>Search</button>
+      </div>
+
+      {loading && <p>Loading...</p>}
+      {error && <p className="error-msg">Error: {error}</p>}
+
+      {victim && (
+        <div className="victim-card">
+          <h3 className="section-title">Victim Details</h3>
+          <p>
+            <strong>Type:</strong> {victim.type}
+          </p>
+          <p>
+            <strong>Anonymous:</strong> {victim.anonymous ? "Yes" : "No"}
+          </p>
+
+          <h4 className="section-title">Demographics</h4>
           <p>
             <strong>Gender:</strong> {victim.demographics.gender}
           </p>
@@ -55,40 +97,26 @@ function VictimDetails({ victimId }) {
             <strong>Occupation:</strong>{" "}
             {victim.demographics.occupation || "N/A"}
           </p>
-          {victim.demographics.residence && (
-            <>
-              <p>
-                <strong>Residence:</strong> {victim.demographics.residence.city}
-                , {victim.demographics.residence.country}
-              </p>
-              <p>
-                <strong>Address:</strong>{" "}
-                {victim.demographics.residence.address || "N/A"}
-              </p>
-            </>
-          )}
-        </>
-      )}
 
-      {victim.contact_info && (
-        <>
-          <h3>Contact Info</h3>
+          <h4 className="section-title">Contact Info</h4>
           <p>
-            <strong>Email:</strong> {victim.contact_info.email || "N/A"}
+            <strong>Email:</strong> {victim.contact_info?.email || "N/A"}
           </p>
           <p>
-            <strong>Phone:</strong> {victim.contact_info.phone || "N/A"}
+            <strong>Phone:</strong> {victim.contact_info?.phone || "N/A"}
           </p>
           <p>
             <strong>Secure Messaging:</strong>{" "}
-            {victim.contact_info.secure_messaging || "N/A"}
+            {victim.contact_info?.secure_messaging || "N/A"}
           </p>
-        </>
-      )}
 
-      {victim.risk_assessment && (
-        <>
-          <h3>Risk Assessment</h3>
+          <h4 className="section-title">Cases Involved</h4>
+          <p>
+            <strong>Cases:</strong>{" "}
+            {victim.cases_involved?.join(", ") || "None"}
+          </p>
+
+          <h4 className="section-title">Risk Assessment</h4>
           <p>
             <strong>Level:</strong> {victim.risk_assessment.level}
           </p>
@@ -100,24 +128,37 @@ function VictimDetails({ victimId }) {
             <strong>Protection Needed:</strong>{" "}
             {victim.risk_assessment.protection_needed ? "Yes" : "No"}
           </p>
-          <p>
-            <strong>Notes:</strong> {victim.risk_assessment.notes || "N/A"}
-          </p>
-        </>
-      )}
 
-      {victim.support_services && victim.support_services.length > 0 && (
-        <>
-          <h3>Support Services</h3>
-          <ul>
-            {victim.support_services.map((service, index) => (
-              <li key={index}>
-                {service.type} - {service.provider || "Unknown"} (
-                {service.status || "Status unknown"})
-              </li>
-            ))}
-          </ul>
-        </>
+          <button
+            className="btn-update"
+            onClick={() => navigate(`/victims/update-risk/${victim._id}`)}
+          >
+            Update Risk
+          </button>
+
+          <h4 className="section-title">Support Services</h4>
+          {victim.support_services?.length > 0 ? (
+            <ul>
+              {victim.support_services.map((s, i) => (
+                <li key={i}>
+                  {s.type} - {s.provider || "Unknown"} ({s.status || "Unknown"})
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No support services recorded.</p>
+          )}
+
+          <h4 className="section-title">Timestamps</h4>
+          <p>
+            <strong>Created At:</strong>{" "}
+            {new Date(victim.created_at).toLocaleString()}
+          </p>
+          <p>
+            <strong>Updated At:</strong>{" "}
+            {new Date(victim.updated_at).toLocaleString()}
+          </p>
+        </div>
       )}
     </div>
   );

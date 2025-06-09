@@ -11,4 +11,5 @@ victims_collection = db["victims"]
 reports_collection = db["incident_reports"]
 status_history_collection = db["case_status_history"]
 users_collection = db["users"]
-
+case_status_history_collection = db["case_status_history"]
+victim_risk_assessments_collection = db["victim_risk_assessments"]
