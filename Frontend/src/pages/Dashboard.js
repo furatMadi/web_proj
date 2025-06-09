@@ -1,9 +1,5 @@
 import React from "react";
-<<<<<<< HEAD
-import Navbar from "./Navbar";
-=======
 // import Navbar from "./Navbar";
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 import StatCard from "./StatCard";
 import NewsCard from "./NewsCard";
 
@@ -13,11 +9,6 @@ import femalesImg from "../images/females.png";
 import totalImg from "../images/total.png";
 import Footer from "../components/Footer";
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 const statsData = [
   {
     title: "Administrative Detainees",
@@ -50,11 +41,7 @@ const newsData = [
 const Dashboard = () => {
   return (
     <div>
-<<<<<<< HEAD
-      <Navbar />
-=======
       {/* <Navbar /> */}
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
       <main style={{ padding: "1rem 2rem" }}>
         <section
           style={{

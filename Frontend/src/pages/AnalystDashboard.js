@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
 import { Link } from 'react-router-dom';
-<<<<<<< HEAD
 import AnalystNav from '../components/AnalystNav';
-=======
-// import AnalystNav from '../components/AnalystNav';
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 import Footer from '../components/Footer';
 
 const AnalystDashboard = () => {
@@ -29,11 +25,7 @@ const AnalystDashboard = () => {
 
   return (
     <>
-<<<<<<< HEAD
       <AnalystNav />
-=======
-      {/* <AnalystNav /> */}
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
       <div className="container mt-4 text-center">
         <header className="mb-5">
           <h1 className="text-2xl font-bold">Dashboard Overview</h1>

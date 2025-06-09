@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-import AnalystDashboard from './pages/AnalystDashboard.js'; 
-import DetailedView from './pages/DetailedView';
-import GeoInsights from './pages/GeoInsights';
-import ReportPage from './pages/ReportPage';
-import { Routes, Route } from "react-router-dom";
-=======
 import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
@@ -18,19 +11,13 @@ import DetailedView from "./pages/DetailedView";
 import GeoInsights from "./pages/GeoInsights";
 import ReportPage from "./pages/ReportPage";
 // import { Routes, Route } from "react-router-dom";
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import Analyst from "./pages/Analyst";
 import Organization from "./pages/Organization";
-<<<<<<< HEAD
-//import VictimDetails from "./pages/VictimDetails";
-import "./pages/addReport"
-=======
 import VictimDetails from "./pages/VictimDetails.js";
 import "./pages/addReport";
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 import SearchPage from "./pages/SearchPage";
 import ContactUs from "./pages/ContactUs";
 import AboutUs from "./pages/AboutUs";
@@ -40,33 +27,6 @@ import AddReport from "./pages/addReport";
 import "leaflet/dist/leaflet.css";
 import AnalyticsPage from "./pages/organizationAnalytics";
 
-<<<<<<< HEAD
-function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/admin" element={<Admin />} />
-
-      <Route path="/analystDashboard" element={<AnalystDashboard />} />
-      <Route path="/detailed" element={<DetailedView />} />
-      <Route path="/geo" element={<GeoInsights />} />
-      <Route path="/report" element={<ReportPage />} />
-      <Route path="/organization" element={<Organization />} />
-      <Route path="/analyst" element={<Analyst />} />
-      <Route path="/organization" element={<Organization />} />
-      <Route path="/SearchPage" element={<SearchPage />} />
-      <Route path="/contact" element={<ContactUs />} />
-      <Route path="/about" element={<AboutUs />} />
-      <Route path="/admindashborder" element={<AdminDashboard />} />
-      <Route path="/admin/cases" element={<AdminCases />} />
-      <Route path="/addReport" element={<AddReport />} />
-      <Route path="/analytics" element={<AnalyticsPage />} />
-
-
-      {/* <Route path="/victim/:victimId" element={<VictimDetails />}/> */}
-    </Routes>
-=======
 import AddVictim from "./pages/AddVictim";
 import VictimRiskHistory from "./pages/VictimRiskHistory";
 import UpdateRiskLevel from "./pages/UpdateRiskLevel";
@@ -162,7 +122,6 @@ function App() {
         <Route path="/logout" element={<LogoutPage />} />
       </Routes>
     </div>
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
   );
 }
 

@@ -7,10 +7,7 @@ from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from db import victims_collection
-<<<<<<< HEAD
-=======
 from db import victim_risk_assessments_collection 
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 
 
 
@@ -24,16 +21,9 @@ from datetime import datetime
 from bson import ObjectId
 from bson.errors import InvalidId
 
-<<<<<<< HEAD
-router = APIRouter(
-    prefix="/victims",
-    tags=["Victims"]
-)
-=======
 
 router = APIRouter()
 
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 
 
 
@@ -54,8 +44,6 @@ class RiskAssessment(BaseModel):
     threats: List[str]
     protection_needed: bool
 
-<<<<<<< HEAD
-=======
 
 class UpdateRiskLevel(BaseModel):
     level: str
@@ -65,7 +53,6 @@ class UpdateRiskLevel(BaseModel):
     notes: Optional[str] = None
 
 
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 class SupportService(BaseModel):
     type: str
     provider: Optional[str] = None
@@ -80,12 +67,6 @@ class Victim(BaseModel):
     risk_assessment: RiskAssessment
     support_services: Optional[List[SupportService]] = []
 
-<<<<<<< HEAD
-class UpdateRiskLevel(BaseModel):
-    level: str
-=======
-
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 
 
 # --- POST: Add new victim ---
@@ -97,11 +78,6 @@ def create_victim(victim: Victim):
         victim_dict["created_at"] = now
         victim_dict["updated_at"] = now
 
-<<<<<<< HEAD
-        print("🟢 Inserting victim:", victim_dict)  # Debug
-        result = victims_collection.insert_one(victim_dict)
-        return {"id": str(result.inserted_id), "message": "Victim added successfully"}
-=======
         # ✨ أدخل الضحية أولًا
         result = victims_collection.insert_one(victim_dict)
         victim_id = result.inserted_id
@@ -121,16 +97,11 @@ def create_victim(victim: Victim):
         victim_risk_assessments_collection.insert_one(assessment_doc)
 
         return {"id": str(victim_id), "message": "Victim and initial risk assessment added"}
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
     
     except Exception as e:
         print("❌ Error while inserting victim:", e)
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
-<<<<<<< HEAD
-=======
-
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 # --- GET: Get victim by ID ---
 @router.get("/victims/{victim_id}")
 def get_victim(victim_id: str):
@@ -149,28 +120,13 @@ def get_victim(victim_id: str):
 @router.patch("/victims/{victim_id}")
 def update_risk_level(victim_id: str, update: UpdateRiskLevel):
     try:
-<<<<<<< HEAD
-=======
         now = datetime.utcnow()
 
         # ✨ أولاً، تعديل الضحية نفسها
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
         result = victims_collection.update_one(
             {"_id": ObjectId(victim_id)},
             {"$set": {
                 "risk_assessment.level": update.level,
-<<<<<<< HEAD
-                "updated_at": datetime.utcnow()
-            }}
-        )
-    except InvalidId:
-        raise HTTPException(status_code=400, detail="Invalid victim ID format")
-
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Victim not found")
-
-    return {"message": "Risk level updated"}
-=======
                 "updated_at": now
             }}
         )
@@ -196,7 +152,6 @@ def update_risk_level(victim_id: str, update: UpdateRiskLevel):
     except InvalidId:
         raise HTTPException(status_code=400, detail="Invalid victim ID format")
 
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 
 # --- GET: Get victims by case ID ---
 @router.get("/victims/case/{case_id}")
@@ -224,9 +179,6 @@ def ping_db():
         client.admin.command('ping')
         return {"status": "✅ MongoDB connected successfully"}
     except Exception as e:
-<<<<<<< HEAD
-        return {"status": "❌ MongoDB connection failed", "error": str(e)}
-=======
         return {"status": "❌ MongoDB connection failed", "error": str(e)} 
     
 # from fastapi import APIRouter, HTTPException
@@ -440,4 +392,3 @@ def ping_db():
 #         return {"status": "✅ MongoDB connected successfully"}
 #     except Exception as e:
 #         return {"status": "❌ MongoDB connection failed", "error": str(e)}
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c

@@ -1,19 +1,11 @@
 import React from "react";
-<<<<<<< HEAD
-import Navbar from "./Navbar"; // تأكد من المسار الصحيح
-=======
 // import Navbar from "./Navbar"; // تأكد من المسار الصحيح
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 import Footer from "../components/Footer"; // تأكد من المسار الصحيح
 
 const AboutUs = () => {
   return (
     <div>
-<<<<<<< HEAD
-      <Navbar />
-=======
       {/* <Navbar /> */}
->>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
       <main style={{ padding: "3rem 2rem" }}>
         <h1 style={{ textAlign: "center", marginBottom: "2rem" }}>About Us</h1>
 
