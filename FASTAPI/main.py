@@ -17,7 +17,7 @@ from risk_assessments import router as risk_assessments_router
 from database_query import router as database_query_router
 from get_new_reports import router as new_reports_router
 from allcases import router as allcases_router
-
+from stats_query import router as stats_query_router
 
 app = FastAPI()
 
@@ -33,7 +33,7 @@ app.include_router(risk_assessments_router)
 app.include_router(allcases_router)
 
 app.include_router(database_query_router)
-
+app.include_router(stats_query_router)
 
 # CORS for frontend setup
 app.add_middleware(
