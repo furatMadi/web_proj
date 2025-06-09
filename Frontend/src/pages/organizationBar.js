@@ -9,7 +9,10 @@ const OrganizationNav = () => {
     { name: "Home", href: "./" },
     { name: "About Us", href: "/about" },
     { name: "Add new Report", href: "/addReport" },
+<<<<<<< HEAD
     { name: "Update a report", href: "/contact" },
+=======
+>>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
     { name: "Search", href: "./SearchPage" },
     { name: "Analytics", href: "/analytics" },
     { name: "Logout", href: "/logout" },
@@ -79,4 +82,8 @@ const styles = {
   },
 };
 
+<<<<<<< HEAD
 export default OrganizationNav;
+=======
+export default OrganizationNav;
+>>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c

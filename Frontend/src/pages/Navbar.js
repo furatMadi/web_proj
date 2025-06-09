@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import logo from "../images/humonitor_logo.png";
 import { name } from "plotly.js/lib/scatter";
@@ -155,3 +156,29 @@ const styles = {
 // };
 
 export default Navbar;
+=======
+import React from "react";
+import AdminNav from "./AdminNav";
+import OrganizationNav from "./organizationBar";
+import AnalystNav from "../components/AnalystNav";
+import DefaultNav from "./DefaultNav";
+
+const Navbar = () => {
+  const role = localStorage.getItem("role");
+
+  if (!role || role === "default") return <DefaultNav />;
+
+  switch (role.toLowerCase()) {
+    case "admin":
+      return <AdminNav />;
+    case "organization":
+      return <OrganizationNav />;
+    case "analyst":
+      return <AnalystNav />;
+    default:
+      return <DefaultNav />; // fallback لأي دور غير معروف
+  }
+};
+
+export default Navbar;
+>>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c

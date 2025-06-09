@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import Footer from "../components/Footer";
+<<<<<<< HEAD
 import Navbar from "./Navbar";
+=======
+// import Navbar from "./Navbar";
+>>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +29,11 @@ const ContactUs = () => {
 
   return (
     <div>
+<<<<<<< HEAD
       <Navbar />
+=======
+      {/* <Navbar /> */}
+>>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
       <main style={{ padding: "2rem 3rem" }}>
         <h1 style={{ textAlign: "center", marginBottom: "2rem" }}>
           Contact Us

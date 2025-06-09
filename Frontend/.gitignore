@@ -1,1 +1,8 @@
 node_modules
+<<<<<<< HEAD
+=======
+*.zip
+venv/
+__pycache__/
+node_modules/
+>>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c

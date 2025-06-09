@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/custom.css';
+<<<<<<< HEAD
 import AnalystNav from '../components/AnalystNav';
+=======
+// import AnalystNav from '../components/AnalystNav';
+>>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
 import Footer from '../components/Footer';
 
 const DetailedView = () => {
@@ -70,7 +74,11 @@ const DetailedView = () => {
 
   return (
     <>
+<<<<<<< HEAD
       <AnalystNav />
+=======
+      {/* <AnalystNav /> */}
+>>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
       <div className="container mt-4 text-center">
         <h1 className="mb-4">Detailed Analytics</h1>
         <form onSubmit={handleSubmit} className="row g-3 mb-5 text-start">

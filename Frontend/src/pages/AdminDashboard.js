@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "../components/Footer";
@@ -7,6 +8,48 @@ const AdminDashboard = () => {
   return (
     <div>
       <Navbar />
+=======
+import React, { useEffect, useState } from "react";
+
+// import React, { useState } from "react";
+import Navbar from "./Navbar";
+import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
+// import  { useEffect } from "react";
+
+const AdminDashboard = () => {
+  const [stats, setStats] = useState({
+    victims: 0,
+    cases: 0,
+    reports: 0,
+  });
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const [v, c, r] = await Promise.all([
+          fetch("http://localhost:8000/stats/victims-count").then((res) =>
+            res.json()
+          ),
+          fetch("http://localhost:8000/stats/cases-count").then((res) =>
+            res.json()
+          ),
+          fetch("http://localhost:8000/stats/reports-count").then((res) =>
+            res.json()
+          ),
+        ]);
+        setStats({ victims: v.count, cases: c.count, reports: r.count });
+      } catch (err) {
+        console.error("Error fetching stats:", err);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  return (
+    <div>
+      {/* <Navbar /> */}
+>>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
       <main style={{ padding: "2rem 3rem" }}>
         <h1 style={{ textAlign: "center" }}>Admin Dashboard</h1>
 
@@ -30,11 +73,17 @@ const AdminDashboard = () => {
             <h3>Admin Menu</h3>
             <ul style={{ listStyleType: "none", padding: 0 }}>
               <li style={{ margin: "1rem 0" }}>
+<<<<<<< HEAD
                 <Link to="/admin/victims" style={styles.navLink}>
+=======
+                <Link to="/victim-tools" style={styles.navLink}>
+                  {/* <button onClick={() => navigate("/victim-tools")}>View Victims</button> */}
+>>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
                   Victims
                 </Link>
               </li>
               <li style={{ margin: "1rem 0" }}>
+<<<<<<< HEAD
                 <Link to="/admin/cases" style={styles.navLink}>
                   Cases
                 </Link>
@@ -44,6 +93,26 @@ const AdminDashboard = () => {
                   Incident Reports
                 </Link>
               </li>
+=======
+                <Link to="/admin/case-tools" style={styles.navLink}>
+                  Manage Cases
+                </Link>
+              </li>
+
+              {/* <Link to="/admin/case-tools" style={styles.navLink}>Manage Cases</Link> */}
+
+              <li style={{ margin: "1rem 0" }}>
+                <Link to="/incident-tools" style={styles.navLink}>
+                  Incident Reports
+                </Link>
+              </li>
+              <li>
+                <Link style={styles.navLink} to="/analyst-tools">
+                  Analyst Tools
+                </Link>
+              </li>
+
+>>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
               <li style={{ margin: "1rem 0" }}>
                 <Link to="/admin/search" style={styles.navLink}>
                   Advanced Search
@@ -58,6 +127,7 @@ const AdminDashboard = () => {
             <div style={{ display: "flex", gap: "2rem" }}>
               <div style={styles.card}>
                 <h4>Victims</h4>
+<<<<<<< HEAD
                 <p>Total: 120</p>
                 <Link to="/admin/victims" style={styles.button}>
                   View Victims
@@ -76,6 +146,17 @@ const AdminDashboard = () => {
                 <Link to="/admin/reports" style={styles.button}>
                   View Reports
                 </Link>
+=======
+                <p>Total: {stats.victims}</p>
+              </div>
+              <div style={styles.card}>
+                <h4>Cases</h4>
+                <p>Total: {stats.cases}</p>
+              </div>
+              <div style={styles.card}>
+                <h4>Incident Reports</h4>
+                <p>Total: {stats.reports}</p>
+>>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
               </div>
             </div>
           </div>
@@ -111,4 +192,8 @@ const styles = {
   },
 };
 
+<<<<<<< HEAD
 export default AdminDashboard;
+=======
+export default AdminDashboard;
+>>>>>>> b2bad12aec1bf4923d9a265b246404c794c8587c
