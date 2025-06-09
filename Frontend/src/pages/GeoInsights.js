@@ -83,7 +83,7 @@ const GeoInsights = () => {
           <div className="col-md-4">
             <label className="form-label">Violation Type</label>
             <select className="form-select" value={violationType} onChange={e => setViolationType(e.target.value)}>
-              <option value="">All</option>
+              <option value="All">All</option>
               {violationOptions.map(v => <option key={v} value={v}>{v}</option>)}
             </select>
           </div>

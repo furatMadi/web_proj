@@ -76,7 +76,7 @@ const handleGenerate = async () => {
         <div className="col-md-3">
           <label className="form-label">Region</label>
           <select name="region" className="form-select" >
-            <option value="">All</option>
+            <option value="All">All</option>
             {regionOptions.map(type => (
               <option key={type} value={type}>{type}</option>
             ))}
@@ -85,7 +85,7 @@ const handleGenerate = async () => {
         <div className="col-md-3">
           <label className="form-label">Violation Type</label>
           <select name="violation_type" className="form-select"  >
-            <option value="">All</option>
+            <option value="All">All</option>
             {violationOptions.map(type => (
               <option key={type} value={type}>{type}</option>
             ))}

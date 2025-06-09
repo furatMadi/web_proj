@@ -8,12 +8,11 @@ from fastapi.responses import StreamingResponse
 from bson import ObjectId
 from fastapi.responses import StreamingResponse
 import matplotlib.pyplot as plt
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as RLImage
+from reportlab.platypus import Image as RLImage
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
-import requests
-import tempfile
-from PIL import Image, UnidentifiedImageError
+
+from PIL import Image
 import xlsxwriter
 from pathlib import Path
 from urllib.parse import urlparse
@@ -176,29 +175,31 @@ def generate_report(
         worksheet.write(row, 4, case.get("location", {}).get("region", ""))
         worksheet.write(row, 5, creator_name)
 
+        image_col = 6
         for ev in case.get("evidence", []):
             if ev.get("type") == "photo":
-                img_url = ev.get("url", "")
+                filename = ev.get("url", "").split("/")[-1] 
+                image_path = f"../Frontend/public/evidence/{filename}"
                 try:
-                    response = requests.get(img_url, timeout=5)
-                    if response.status_code == 200:
-                        img_data = response.content
-                        try:
-                            img = Image.open(io.BytesIO(img_data))
-                            img.verify()  
-                            image_io = io.BytesIO(img_data)
-                            worksheet.insert_image(row, 6, "image.jpg", {
-                                'image_data': image_io,
-                                'x_scale': 0.3,
-                                'y_scale': 0.3
-                            })
-                        except UnidentifiedImageError:
-                            print(f"Unrecognized image format: {img_url}")
-                    else:
-                        print(f"Failed to fetch image: {img_url} - Status: {response.status_code}")
+                    with open(image_path, "rb") as f:
+                        img_data = f.read()
+                        img = Image.open(io.BytesIO(img_data))
+                        img.verify()  
+                        image_io = io.BytesIO(img_data)
+                        worksheet.set_row(row, 100)
+                        worksheet.insert_image(row, image_col, filename, {
+                            'image_data': image_io,
+                            'x_scale': 0.3,
+                            'y_scale': 0.3
+                        })
+                        worksheet.set_column(image_col, image_col, 20)
+                        image_col += 1
+
                 except Exception as e:
-                    print(f"Error inserting image from {img_url}: {e}")
-                break
+                            print(f"Error inserting local image from {image_path}: {e}")
+                except Exception as e:
+                    print(f"Error inserting image from {image_path}: {e}")
+                
 
         row += 1
 
@@ -210,81 +211,3 @@ def generate_report(
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": "attachment; filename=report.xlsx"}
     )
-
-@router.get("/report/pdf")
-def generate_pdf_report(
-    start: Optional[datetime] = Query(None),
-    end: Optional[datetime] = Query(None),
-    region: Optional[str] = Query(None),
-    violation_type: Optional[str] = Query(None)
-):
-    # Build query
-    query = {}
-    if start and end:
-        query["date_occurred"] = {"$gte": start, "$lte": end}
-    elif start:
-        query["date_occurred"] = {"$gte": start}
-    elif end:
-        query["date_occurred"] = {"$lte": end}
-    if region and region != "All":
-        query["location.region"] = region
-    if violation_type and violation_type != "All":
-        query["violation_types"] = violation_type
-
-    data = list(cases_collection.find(query))
-
-    # Generate basic chart (for example, cases per region)
-    region_counts = {}
-    for case in data:
-        reg = case.get("location", {}).get("region", "Unknown")
-        region_counts[reg] = region_counts.get(reg, 0) + 1
-
-    plt.figure(figsize=(6,4))
-    plt.bar(region_counts.keys(), region_counts.values(), color='orange')
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    chart_img = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
-    plt.savefig(chart_img.name)
-    plt.close()
-
-    # Build PDF
-    buffer = io.BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4)
-    styles = getSampleStyleSheet()
-    elements = []
-
-    elements.append(Paragraph("<b>Human Rights Report Summary</b>", styles['Title']))
-    elements.append(Spacer(1, 12))
-
-    elements.append(Paragraph(f"Filtered by: Region = {region or 'All'}, Violation Type = {violation_type or 'All'}", styles['Normal']))
-    elements.append(Spacer(1, 12))
-
-    elements.append(Paragraph("<b>Cases by Region Chart</b>", styles['Heading2']))
-    elements.append(RLImage(chart_img.name, width=400, height=300))
-    elements.append(Spacer(1, 12))
-
-    for case in data:
-        elements.append(Paragraph(f"<b>{case.get('title')}</b>", styles['Heading3']))
-        elements.append(Paragraph(f"<i>{case.get('description')}</i>", styles['Normal']))
-        elements.append(Paragraph(f"Status: {case.get('status')} | Date: {case.get('date_occurred').strftime('%Y-%m-%d') if case.get('date_occurred') else 'N/A'}", styles['Normal']))
-
-        # Embed first image evidence if available
-        for ev in case.get('evidence', []):
-            if ev.get('type') == 'photo':
-                try:
-                    img_url = f"http://localhost:8000{ev['url']}" if ev['url'].startswith("/") else ev['url']
-                    img_data = requests.get(img_url).content
-                    img_file = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
-                    img_file.write(img_data)
-                    img_file.close()
-                    elements.append(RLImage(img_file.name, width=250, height=180))
-                    break
-                except:
-                    continue
-
-        elements.append(Spacer(1, 12))
-
-    doc.build(elements)
-    buffer.seek(0)
-
-    return StreamingResponse(buffer, media_type="application/pdf", headers={"Content-Disposition": "inline; filename=report.pdf"})

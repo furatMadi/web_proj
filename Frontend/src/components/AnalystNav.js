@@ -2,8 +2,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../images/humonitor_logo.png";
+import { useNavigate } from "react-router-dom";
 
-const AnalystNav = () => (
+const AnalystNav = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate("/"); 
+  };
+  return(
   <nav style={styles.navbar}>
     <Link to="/analystDashboard" className="d-flex align-items-center text-white text-decoration-none">
       <img src={logo} alt="Logo" style={{ height: "50px", marginRight: "10px" }} />
@@ -14,10 +21,11 @@ const AnalystNav = () => (
       <li><Link style={styles.link} to="/detailed">Detailed View</Link></li>
       <li><Link style={styles.link} to="/geo">Geo Insights</Link></li>
       <li><Link style={styles.link} to="/report">Generate Report</Link></li>
-      <li><Link style={{ ...styles.link, color: "#fff0f0" }} to="/logout">Logout</Link></li>
+      <li><span style={{ ...styles.link, color: "#fff0f0", cursor: "pointer" }} onClick={handleLogout}>Logout</span></li>
     </ul>
   </nav>
 );
+}
 
 const styles = {
   navbar: {
