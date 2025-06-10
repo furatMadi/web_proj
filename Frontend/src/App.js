@@ -37,6 +37,7 @@ import RiskTrends from "./pages/RiskTrends";
 import AnalystTools from "./pages/AnalystTools";
 import AdminCaseTools from "./pages/AdminCaseTools";
 import IncidentReportTools from "./pages/IncidentReportTools";
+import ManageCaseStatus from "./pages/ManageCaseStatus"; 
 
 import DefaultNav from "./pages/DefaultNav.js"; 
 import LogoutPage from "./pages/LogoutPage";
@@ -119,6 +120,7 @@ function App() {
         <Route path="/AddCaseByAdmin" element={<AddCaseByAdmin />} />
         <Route path="/view-cases" element={<ViewCasesForAdmin />} />
         <Route path="/AdminCase-search" element={<AdminCaseSearch />} />
+        <Route path="/manage-case-status" element={<ManageCaseStatus />} />
       </Routes>
     </div>
   );
