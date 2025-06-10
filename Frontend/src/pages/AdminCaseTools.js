@@ -17,30 +17,7 @@ const AdminCaseTools = () => {
 
   return (
     <div>
-      {/* ✅ Navbar
-      <nav style={styles.navbar}>
-        <img src={logo} alt="Humonitor Logo" style={{ height: "70px" }} />
-        <div style={styles.logo}>Humonitor Dashboard</div>
-        <ul style={styles.navLinks}>
-          {navItems.map((item, i) => (
-            <li key={item.name}>
-              <Link
-                to={item.href}
-                style={{
-                  ...styles.navLink,
-                  ...(hoverIndex === i ? styles.navLinkHover : {}),
-                }}
-                onMouseEnter={() => setHoverIndex(i)}
-                onMouseLeave={() => setHoverIndex(null)}
-              >
-                {item.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav> */}
 
-      {/* ✅ Main Tools Section */}
       <div style={styles.wrapper}>
         <div style={styles.card}>
           <h2 style={styles.title}>🗂️ Case Management</h2>
@@ -74,6 +51,12 @@ const AdminCaseTools = () => {
               onClick={() => navigate("/view-cases")}
             >
               View Case to delete
+            </button>
+            <button
+              style={styles.button}
+              onClick={() => navigate("/manage-case-status")}
+            >
+              View Case to update staus
             </button>
 
             
