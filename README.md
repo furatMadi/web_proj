@@ -1,5 +1,5 @@
 # Humonitor – Human Rights Monitor MIS  
-COMP4382 (Sec 2024/2025) • Computer Science Department
+COMP4382 (Sec 1) • Computer Science Department
 
 | Team Member | ID       |
 |-------------|----------|
